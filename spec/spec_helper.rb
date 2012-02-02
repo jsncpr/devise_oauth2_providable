@@ -5,7 +5,9 @@ require File.expand_path("dummy/config/environment.rb",  spec_root)
 
 require 'pry'
 require 'rspec/rails'
+require 'database_cleaner'
 require 'shoulda-matchers'
+require 'mongoid-rspec'
 require 'factory_girl_rspec'
 FactoryGirl.definition_file_paths = [File.join(spec_root, 'factories')]
 FactoryGirl.find_definitions
@@ -24,6 +26,11 @@ RSpec.configure do |config|
   # enable rendering of views for controller tests
   # see http://stackoverflow.com/questions/4401539/rspec-2-how-to-render-views-by-default-for-all-controller-specs
   config.render_views
-end
 
-ActiveRecord::Migrator.migrate(File.expand_path("dummy/db/migrate/", spec_root))
+  # Clean up the database
+  config.before(:each) do
+    DatabaseCleaner.orm = "mongoid" 
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean
+  end
+end

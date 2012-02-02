@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Devise::Oauth2Providable::RefreshToken do
-  it { Devise::Oauth2Providable::RefreshToken.table_name.should == 'oauth2_refresh_tokens' }
-
   describe 'basic refresh token instance' do
     with :client
     subject do
@@ -15,9 +13,10 @@ describe Devise::Oauth2Providable::RefreshToken do
     it { should validate_presence_of :client }
     it { should validate_presence_of :expires_at }
     it { should have_many :access_tokens }
-    it { should have_db_index :client_id }
-    it { should have_db_index :user_id }
-    it { should have_db_index(:token).unique(true) }
-    it { should have_db_index :expires_at }
+    # TODO Uncomment when mongoid-rspec bumps version (>= 1.4.5)
+    #it { should have_index_for :client_id }
+    #it { should have_index_for :user_id }
+    #it { should have_index_for(:token).with_options(:unique => true) }
+    #it { should have_index_for :expires_at }
   end
 end
